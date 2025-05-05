@@ -1,0 +1,6 @@
+*.log
+*.sql~
+*.swp
+.DS_Store
+tmp/
+./innodb_temp/*
