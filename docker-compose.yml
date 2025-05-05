@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-container
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass # ルートユーザーのパスワード
+      MYSQL_DATABASE: testdb # 自動で作られるDB名
+      MYSQL_USER: user # 新しく作られるユーザー
+      MYSQL_PASSWORD: userpass # ユーザーのパスワード
+    volumes:
+      - ./mysql-data:/var/lib/mysql # 永続化
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: nextjs-container
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    tty: true
+    depends_on:
+      - db
