@@ -6,7 +6,7 @@ services:
     container_name: mysql-container
     restart: always
     ports:
-      - "3307:3306"
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: rootpass # ルートユーザーのパスワード
       MYSQL_DATABASE: testdb # 自動で作られるDB名
@@ -27,5 +27,21 @@ services:
     environment:
       - NODE_ENV=development
     tty: true
+    depends_on:
+      - db
+  
+  backend:
+    build:
+      context: ./lifestylehackbackend
+    container_name: spring-dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./lifestylehackbackend:/app
+      - ~/.m2:/root/.m2
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/testdb
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: userpass
     depends_on:
       - db
